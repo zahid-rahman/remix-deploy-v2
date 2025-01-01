@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/cloudflare";
+import { json, type MetaFunction } from "@remix-run/cloudflare";
+import { useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,7 +8,14 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const loader = () => {
+  return json({
+    test: process.env.TEST,
+  });
+};
+
 export default function Index() {
+  const data = useLoaderData<typeof loader>();
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="flex flex-col items-center gap-16">
@@ -32,6 +40,8 @@ export default function Index() {
           <p className="leading-6 text-gray-700 dark:text-gray-200">
             What&apos;s next?
           </p>
+
+          {data.test === "test" && "You are next"}
           <ul>
             {resources.map(({ href, text, icon }) => (
               <li key={href}>
